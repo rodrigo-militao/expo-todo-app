@@ -14,7 +14,7 @@ export default class TodoItem extends React.Component {
        style={styles.todoItem}
        onPress={() => this.props.toggleDone()}
        >
-        <Text style={(todoItem.done) ? {color: '#AAAAAA'} : {color: '#313131'}}>
+        <Text style={(todoItem.done) ? {color: '#AAAAAA', textDecorationLine: 'line-through'} : {color: '#313131'}}>
           { todoItem.title }
         </Text>
 
@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingLeft: 15
+    paddingLeft: 15,
   }
 })

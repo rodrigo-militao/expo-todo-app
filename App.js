@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, AsyncStorage } from 'react-native';
 import Header from './components/Header';
 import InputBar from './components/InputBar';
 import TodoItem from './components/TodoItem';
@@ -11,6 +11,14 @@ export default class App extends React.Component {
     this.state = {
       todoInput: '',
       todos: [],
+    }
+  }
+
+  async componentDidMount() {
+    try {
+      this.setState({todos: JSON.parse(await AsyncStorage.getItem('todos'))});
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -27,9 +35,15 @@ export default class App extends React.Component {
       todoInput: '',
       todos
     });
+
+    try {
+      await AsyncStorage.setItem('todos', JSON.stringify(this.state.todos));
+    } catch(error) {
+      alert(error);
+    }
   }
 
-  toggleDone (item) {
+  async toggleDone (item) {
     let todos = this.state.todos;
 
     todos = todos.map((todo) => {
@@ -39,15 +53,25 @@ export default class App extends React.Component {
       return todo;
     });
 
-    this.setState({todos});
+    await this.setState({todos});
+    try {
+      await AsyncStorage.setItem('todos', JSON.stringify(this.state.todos));
+    } catch(error) {
+      alert(error);
+    }
   }
 
-  removeTodo (item) {
+  async removeTodo (item) {
     let todos = this.state.todos;
 
     todos = todos.filter((todo) => todo.id !== item.id);
 
-    this.setState({todos});
+   await this.setState({todos});
+    try {
+      await AsyncStorage.setItem('todos', JSON.stringify(this.state.todos));
+    } catch(error) {
+      alert(error);
+    }
   }
 
   render() {
@@ -89,6 +113,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   }
 });
