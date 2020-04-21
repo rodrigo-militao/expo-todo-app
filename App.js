@@ -15,12 +15,14 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
+    let start = JSON.parse(await AsyncStorage.getItem('todos'));
+    if (start.length === 0 || start === null) start = this.state.todos;
     try {
-      this.setState({todos: JSON.parse(await AsyncStorage.getItem('todos'))});
+      this.setState({todos: start});
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
-  }
+  } 
 
   async addNewTodo () {
     let todos = this.state.todos;
@@ -37,7 +39,7 @@ export default class App extends React.Component {
     });
 
     try {
-      await AsyncStorage.setItem('todos', JSON.stringify(this.state.todos));
+      await AsyncStorage.setItem('todos', JSON.stringify(todos));
     } catch(error) {
       alert(error);
     }
